@@ -23,8 +23,9 @@
           </v-toolbar-title>
         </v-container> <!--Header text -->
 
+        <!--Dialog ADD New Employee-->
         <v-dialog
-          v-model="dialog"
+          v-model="dialogAdd"
           max-width="500px"
         >
           <template #activator="{ on , attrs }">
@@ -84,26 +85,66 @@
               </v-container>
               <small>*please check information before confirm*</small>
             </v-card-text>
+
             <v-card-actions>
               <v-spacer />
               <v-btn
-                @click="dialog=false"
+                color="red"
+                text
+                @click="dialogAdd=false"
               >
                 Close
               </v-btn>
+
               <v-btn
-                @click="dialog=false"
+                color="green"
+                @click="dialogAdd=false"
               >
                 Confirm
               </v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog> <!--ADD New Employee-->
+        </v-dialog>
 
-        <v-btn color="red" class="mx-2">
-          delete <!--Delete Button -->
-        </v-btn>
-        <v-spacer />
+        <!--Dialog Selected Delete-->
+        <v-dialog
+          v-model="dialogSelectedDelete"
+          max-width="500px"
+        >
+          <template #activator="{ on , attrs}">
+            <v-btn
+              v-bind="attrs"
+              color="red"
+              class="mx-2"
+              v-on="on"
+            >
+              delete <!--Delete Button -->
+            </v-btn>
+            <v-spacer />
+          </template>
+          <v-card-title>
+            <b>Delete Employees</b>
+          </v-card-title>
+          <v-card-text>
+            <div style="font-size: 15px;">
+              Confirm to delete all column
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn
+              color="red"
+              @click="dialogSelectedDelete = false"
+            >
+              Confirm
+            </v-btn>
+            <v-btn
+              color="blue"
+              @click="dialogSelectedDelete = false"
+            >
+              Cancel
+            </v-btn>
+          </v-card-actions>
         </v-dialog>
       </v-toolbar>
     </template>
@@ -123,8 +164,8 @@
 export default {
   data: () => ({
     selected: [],
-    dialog: false,
-    dialogDelete: false,
+    dialogAdd: false,
+    dialogSelectedDelete: false,
     headers: [
       {
         text: 'No.',
