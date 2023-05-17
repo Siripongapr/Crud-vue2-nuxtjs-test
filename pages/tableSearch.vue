@@ -1,201 +1,322 @@
 <template>
-  <v-data-table
-    v-model="selected"
-    light
-    :headers="headers"
-    :items="info"
-    :items-per-page="5"
-    show-select
-    class="elevation-1"
-    item-key="name"
-  >
-    <template #[`item.numberSq`]="{index}">
-      {{ index+1 }}
-    </template>
+  <div>
+    <v-data-table
+      v-model="selected"
+      light
+      :headers="headers"
+      :items="info"
+      :items-per-page="5"
+      show-select
+      class="elevation-1"
+      item-key="name"
+    >
+      <!--Table-data No. ++-->
+      <template #[`item.numberSq`]="{index}">
+        {{ index+1 }}
+      </template>
 
-    <template #top>
-      <v-toolbar flat color="#0D47A1">
-        <v-container>
-          <v-row>
-            <v-col
-              cols="5"
-            >
-              <v-toolbar-title>
-                <div
-                  style="color:white;"
+      <!--create toolbar at top-->
+      <template #top>
+        <v-toolbar flat color="#0D47A1">
+          <v-container>
+            <v-row>
+              <v-col
+                cols="5"
+              >
+                <v-toolbar-title>
+                  <div
+                    style="color:white;"
+                  >
+                    Manage
+                    <b>Employees</b>
+                  </div>
+                </v-toolbar-title>
+              </v-col>
+              <v-col
+                cols="7"
+                align="end"
+              >
+                <v-btn
+                  class="white--text"
+                  color="red"
+                  @click="openDialogSelectedDelete"
                 >
-                  Manage
-                  <b>Employees</b>
-                </div>
-              </v-toolbar-title>
-            </v-col>
-            <v-col
-              cols="7"
-              align="end"
-            >
-              <v-btn
-                color="green"
-                @click="openDialogAdd"
-              >
-                ADD NEW EMPLOYEE
-              </v-btn>
-              <v-btn
-                color="red"
-                @click="openDialogSelectedDelete"
-              >
-                DELETE
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-container> <!--Header text -->
+                  <v-icon>
+                    mdi-minus-circle
+                  </v-icon>
+                  DELETE
+                </v-btn>
+                <v-btn
+                  class="white--text"
+                  color="green"
+                  @click="openDialogAdd"
+                >
+                  <v-icon>mdi-plus-circle</v-icon>
+                  ADD NEW EMPLOYEE
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-toolbar>
+      </template>
 
-        <!--Dialog ADD New Employee-->
-        <v-dialog
-          v-model="dialogAdd"
-          max-width="500px"
+      <template slot="item.actions">
+        <!--Edit button-->
+        <v-btn
+          x-small
+          text
+          @click="openDialogEdit"
         >
-          <v-card>
-            <v-card-title>Add New Employee</v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    ms="4"
-                  >
-                    <v-text-field
-                      label="Name"
-                      hint="Enter your Name"
-                    />
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    ms="4"
-                  >
-                    <v-text-field
-                      label="Email"
-                      hint="exam@gmail.com"
-                    />
-                  </v-col>
-                  <v-col
-                    cols="8"
-                    sm="8"
-                    ms="8"
-                  >
-                    <v-text-field
-                      label="Address"
-                    />
-                  </v-col>
-                  <v-col
-                    cols="4"
-                    sm="4"
-                    ms="4"
-                  >
-                    <v-text-field
-                      label="Phone"
-                      hint="Phone number"
-                    />
-                  </v-col>
-                </v-row>
-              </v-container>
-              <small>*please check information before confirm*</small>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer />
-              <v-btn
-                color="red"
-                text
-                @click="dialogAdd=false"
-              >
-                Close
-              </v-btn>
-
-              <v-btn
-                color="green"
-                @click="dialogAdd=false"
-              >
-                Confirm
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-
-        <!--Dialog Selected Delete-->
-        <v-dialog
-          v-model="dialogSelectedDelete"
-          max-width="500px"
+          <v-icon color="yellow" small>
+            mdi-pencil
+          </v-icon>
+        </v-btn>
+        <!--Delete button-->
+        <v-btn
+          x-small
+          text
+          @click="openDialogDelete"
         >
-          <v-card>
-            <v-card-title>
-              <b>Delete Employees</b>
-            </v-card-title>
-            <v-card-text>
-              <div style="font-size: 15px;">
-                Confirm to delete all column
-              </div>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer />
-              <v-btn
-                color="red"
-                @click="dialogSelectedDelete = false"
-              >
-                Confirm
-              </v-btn>
-              <v-btn
-                color="blue"
-                @click="dialogSelectedDelete = false"
-              >
-                Cancel
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
+          <v-icon color="red" small>
+            mdi-delete
+          </v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
 
-    <template slot="item.actions">
-      <v-btn
-        @click="openDialogEdit"
-      >
-        test dialog 1
-      </v-btn>
-      <!--Dialog Edit-->
-      <v-dialog
-        v-model="dialogEdit"
-        max-width="500px"
-        content-class="elevation-0"
-      >
-        <!-- content-class is for remove shadow box -->
-        <v-card>
-          <v-card-title>
-            Edit Employee
-          </v-card-title>
-          <v-divider />
+    <!--Dialogs-->
+    <!--Dialog Add New Employee-->
+    <v-dialog
+      v-model="dialogAdd"
+      max-width="500px"
+    >
+      <v-card>
+        <v-card-title>Add New Employee</v-card-title>
+        <v-card-text>
           <v-container>
             <v-row>
               <v-col
                 cols="12"
+                sm="6"
+                ms="4"
               >
                 <v-text-field
-                  label="First Name"
+                  label="Name"
+                  hint="Enter your Name"
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                ms="4"
+              >
+                <v-text-field
+                  label="Email"
+                  hint="exam@gmail.com"
+                />
+              </v-col>
+              <v-col
+                cols="8"
+                sm="8"
+                ms="8"
+              >
+                <v-text-field
+                  label="Address"
+                />
+              </v-col>
+              <v-col
+                cols="4"
+                sm="4"
+                ms="4"
+              >
+                <v-text-field
+                  label="Phone"
+                  hint="Phone number"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+          <small>*please check information before confirm*</small>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="red"
+            text
+            @click="dialogAdd=false"
+          >
+            Close
+          </v-btn>
+
+          <v-btn
+            color="green"
+            @click="dialogAdd=false"
+          >
+            Confirm
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!--Dialog SelectedDelete-->
+    <v-dialog
+      v-model="dialogSelectedDelete"
+      max-width="500px"
+    >
+      <v-card>
+        <v-card-title>
+          <b>Delete Employees</b>
+        </v-card-title>
+        <v-card-text>
+          <div style="font-size: 15px;">
+            Confirm to delete all column
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="red"
+            @click="dialogSelectedDelete = false"
+          >
+            Confirm
+          </v-btn>
+          <v-btn
+            color="blue"
+            @click="dialogSelectedDelete = false"
+          >
+            Cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!--Dialog Edit-->
+    <v-dialog
+      v-model="dialogEdit"
+      max-width="398px"
+    >
+      <v-card light>
+        <v-card-title
+          style="font-size:25px; height:77px"
+        >
+          Edit Employee
+          <v-spacer />
+          <v-btn
+            text
+            @click="dialogEdit=false"
+          >
+            <v-icon>
+              mdi-close
+            </v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-divider />
+        <v-card style="height:396px">
+          <!--Name box-->
+          <v-container style="width:338px; height:67px; margin-bottom:20px">
+            <v-row>
+              <v-col>
+                <div style="font-size:14; width:50px; height:21px; margin-bottom:10px">
+                  Name
+                </div>
+                <v-text-field
+                  style="width:338px;"
+                  dense
+                  label=" "
+                  placeholder="Please fill your name"
+                  hint="*require"
+                  solo
+                  flat
+                  outlined
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+
+          <!--Email box-->
+          <v-container style="width:338px; height:67px; margin-bottom:20px">
+            <v-row>
+              <v-col>
+                <div style="font-size:14; width:50px; height:21px; margin-bottom:10px">
+                  Email
+                </div>
+                <v-text-field
+                  style="width:338px;"
+                  dense
+                  label=" "
+                  placeholder="Please fill your Email"
+                  hint="*require"
+                  solo
+                  flat
+                  outlined
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+
+          <!--Address box-->
+          <v-container style="width:338px; height:67px; margin-bottom:35px">
+            <v-row>
+              <v-col>
+                <div style="font-size:14; width:70px; height:21px; margin-bottom:10px">
+                  Address
+                </div>
+                <v-text-field
+                  style="width:338px;"
+                  height="62px"
+                  label=" "
+                  placeholder="Please fill your Address"
+                  hint="*require"
+                  solo
+                  flat
+                  outlined
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+
+          <!--Phone box-->
+          <v-container style="width:338px; height:67px; margin-bottom:25px">
+            <v-row>
+              <v-col>
+                <div style="font-size:14; width:50px; height:21px; margin-bottom:10px">
+                  Phone
+                </div>
+                <v-text-field
+                  style="width:338px;"
+                  dense
+                  label=" "
+                  placeholder="Please fill your Phone"
+                  hint="*require"
+                  solo
+                  flat
                   outlined
                 />
               </v-col>
             </v-row>
           </v-container>
         </v-card>
-      </v-dialog>
-    </template> <!--Edit Delete dialog Icon-->
-  </v-data-table>
+      </v-card>
+      <v-toolbar color="grey lighten-2" height="87px">
+        <v-card /> <!--blank for spacer btn-->
+        <v-spacer />
+        <v-btn text>
+          Cancel
+        </v-btn>
+        <v-btn color="primary">
+          Save
+        </v-btn>
+      </v-toolbar>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
+
 export default {
   data: () => ({
+    count: 0,
     selected: [],
     dialogAdd: false,
     dialogEdit: false,
