@@ -5,10 +5,11 @@
       light
       :headers="headers"
       :items="info"
-      :items-per-page="5"
+      :items-per-page="6"
       show-select
       class="elevation-1"
       item-key="name"
+      hide-default-footer
     >
       <!--Table-data No. ++-->
       <template #[`item.numberSq`]="{index}">
@@ -49,7 +50,7 @@
                 <v-btn
                   class="white--text"
                   color="green"
-                  @click="openDialogAdd"
+                  @click="openDialogAdd(null)"
                 >
                   <v-icon>mdi-plus-circle</v-icon>
                   ADD NEW EMPLOYEE
@@ -60,12 +61,12 @@
         </v-toolbar>
       </template>
 
-      <template slot="item.actions">
+      <template #[`item.actions`]="{item,index}">
         <!--Edit button-->
         <v-btn
           x-small
           text
-          @click="openDialogEdit"
+          @click="openDialogAdd(item, index)"
         >
           <v-icon color="yellow" small>
             mdi-pencil
@@ -75,253 +76,98 @@
         <v-btn
           x-small
           text
-          @click="openDialogDelete"
+          @click="openDialogDelete(index)"
         >
           <v-icon color="red" small>
             mdi-delete
           </v-icon>
         </v-btn>
       </template>
+      <template #footer>
+        <v-container>
+          <div class="d-flex  footerFont">
+            <div
+              class="mr-auto"
+            >
+              Showing
+              <b> 5 </b>
+              out of
+              <b> 25 </b>
+              entries
+            </div>
+            <div
+              class="d-flex footerFont"
+            >
+              <v-btn text style="font-size:12px">
+                Previous
+              </v-btn>
+              <v-btn text style="font-size:12px">
+                1
+              </v-btn>
+              <v-btn text style="font-size:12px">
+                2
+              </v-btn>
+              <v-btn text style="font-size:12px">
+                3
+              </v-btn>
+              <v-btn text style="font-size:12px">
+                4
+              </v-btn>
+              <v-btn text style="font-size:12px">
+                5
+              </v-btn>
+              <v-btn text style="font-size:12px">
+                Next
+              </v-btn>
+            </div>
+          </div>
+        </v-container>
+      </template>
     </v-data-table>
 
     <!--Dialogs-->
-    <!--Dialog Add New Employee-->
-    <v-dialog
-      v-model="dialogAdd"
-      max-width="500px"
-    >
-      <v-card>
-        <v-card-title>Add New Employee</v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-                ms="4"
-              >
-                <v-text-field
-                  label="Name"
-                  hint="Enter your Name"
-                />
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                ms="4"
-              >
-                <v-text-field
-                  label="Email"
-                  hint="exam@gmail.com"
-                />
-              </v-col>
-              <v-col
-                cols="8"
-                sm="8"
-                ms="8"
-              >
-                <v-text-field
-                  label="Address"
-                />
-              </v-col>
-              <v-col
-                cols="4"
-                sm="4"
-                ms="4"
-              >
-                <v-text-field
-                  label="Phone"
-                  hint="Phone number"
-                />
-              </v-col>
-            </v-row>
-          </v-container>
-          <small>*please check information before confirm*</small>
-        </v-card-text>
+    <!--Call dialogAdd from components-->
+    <cpn-dialog-add
+      :item-temp="itemTempo"
+      :is-open="dialogAdd"
+      title="Add New Employee"
+      @dialogClose="closeDialogAdd"
+      @onSubmit="onSubmit"
+    />
+    <!--Call dialogDelete from components-->
+    <cpn-dialog-delete
+      :is-open="dialogSelectedDelete"
+      @dialogClose="closeDialogSelectedDelete"
+    />
 
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="red"
-            text
-            @click="dialogAdd=false"
-          >
-            Close
-          </v-btn>
-
-          <v-btn
-            color="green"
-            @click="dialogAdd=false"
-          >
-            Confirm
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!--Dialog SelectedDelete-->
-    <v-dialog
-      v-model="dialogSelectedDelete"
-      max-width="500px"
-    >
-      <v-card>
-        <v-card-title>
-          <b>Delete Employees</b>
-        </v-card-title>
-        <v-card-text>
-          <div style="font-size: 15px;">
-            Confirm to delete all column
-          </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="red"
-            @click="dialogSelectedDelete = false"
-          >
-            Confirm
-          </v-btn>
-          <v-btn
-            color="blue"
-            @click="dialogSelectedDelete = false"
-          >
-            Cancel
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!--Dialog Edit-->
-    <v-dialog
-      v-model="dialogEdit"
-      max-width="398px"
-    >
-      <v-card light>
-        <v-card-title
-          style="font-size:25px; height:77px"
-        >
-          Edit Employee
-          <v-spacer />
-          <v-btn
-            text
-            @click="dialogEdit=false"
-          >
-            <v-icon>
-              mdi-close
-            </v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-divider />
-        <v-card style="height:396px">
-          <!--Name box-->
-          <v-container style="width:338px; height:67px; margin-bottom:20px">
-            <v-row>
-              <v-col>
-                <div style="font-size:14; width:50px; height:21px; margin-bottom:10px">
-                  Name
-                </div>
-                <v-text-field
-                  style="width:338px;"
-                  dense
-                  label=" "
-                  placeholder="Please fill your name"
-                  hint="*require"
-                  solo
-                  flat
-                  outlined
-                />
-              </v-col>
-            </v-row>
-          </v-container>
-
-          <!--Email box-->
-          <v-container style="width:338px; height:67px; margin-bottom:20px">
-            <v-row>
-              <v-col>
-                <div style="font-size:14; width:50px; height:21px; margin-bottom:10px">
-                  Email
-                </div>
-                <v-text-field
-                  style="width:338px;"
-                  dense
-                  label=" "
-                  placeholder="Please fill your Email"
-                  hint="*require"
-                  solo
-                  flat
-                  outlined
-                />
-              </v-col>
-            </v-row>
-          </v-container>
-
-          <!--Address box-->
-          <v-container style="width:338px; height:67px; margin-bottom:35px">
-            <v-row>
-              <v-col>
-                <div style="font-size:14; width:70px; height:21px; margin-bottom:10px">
-                  Address
-                </div>
-                <v-text-field
-                  style="width:338px;"
-                  height="62px"
-                  label=" "
-                  placeholder="Please fill your Address"
-                  hint="*require"
-                  solo
-                  flat
-                  outlined
-                />
-              </v-col>
-            </v-row>
-          </v-container>
-
-          <!--Phone box-->
-          <v-container style="width:338px; height:67px; margin-bottom:25px">
-            <v-row>
-              <v-col>
-                <div style="font-size:14; width:50px; height:21px; margin-bottom:10px">
-                  Phone
-                </div>
-                <v-text-field
-                  style="width:338px;"
-                  dense
-                  label=" "
-                  placeholder="Please fill your Phone"
-                  hint="*require"
-                  solo
-                  flat
-                  outlined
-                />
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card>
-      </v-card>
-      <v-toolbar color="grey lighten-2" height="87px">
-        <v-card /> <!--blank for spacer btn-->
-        <v-spacer />
-        <v-btn text>
-          Cancel
-        </v-btn>
-        <v-btn color="primary">
-          Save
-        </v-btn>
-      </v-toolbar>
-    </v-dialog>
+    <!--Call dialogDelete from components (reuse)-->
+    <cpn-dialog-delete
+      :is-open="dialogDelete"
+      @dialogConfirm="confirmDialogDelete"
+      @dialogClose="closeDialogDelete"
+    />
   </div>
 </template>
 
 <script>
+import employeeInfo from '../assets/data/employeeInfo.json'
+import cpnDialogAdd from '../components/dialogAdd.vue'
+import cpnDialogDelete from '../components/DialogDelete.vue'
 
 export default {
+  components: {
+    cpnDialogAdd, cpnDialogDelete
+  },
   data: () => ({
+    itemTempo: null,
     count: 0,
+    infoTempo: -1,
     selected: [],
     dialogAdd: false,
-    dialogEdit: false,
     dialogSelectedDelete: false,
-
+    dialogEdit: false,
+    dialogDelete: false,
+    info: employeeInfo,
     headers: [
       {
         text: 'No.',
@@ -334,57 +180,67 @@ export default {
       { text: 'Address', value: 'address' },
       { text: 'Phone', value: 'phone' },
       { text: 'Actions', value: 'actions', sortable: false }
-    ],
-    info: [
-      {
-        name: 'Thomas Hardy',
-        email: 'thomashardy@mail.com',
-        address: '89 Chiaroscuro Rd, Portland, USA',
-        phone: '(171) 555-2222'
-      },
-      {
-        name: 'Dominique Perrier',
-        email: 'dominiqueperrier@mail.com',
-        address: 'Obere Str. 57, Berlin, Germany',
-        phone: '(313) 555-5735'
-      },
-      {
-        name: 'Maria Anders',
-        email: 'dominiqueperrier@mail.com',
-        address: '25, rue Lauriston, Paris, France',
-        phone: '(503) 555-9931'
-      },
-      {
-        name: 'Fran Wilson',
-        email: 'franwilson@mail.com',
-        address: 'C/ Araquil, 67, Madrid, Spain',
-        phone: '(204) 619-5731'
-      },
-      {
-        name: 'Martin Blank',
-        email: 'martinblank@mail.com',
-        address: 'Via Monte Bianco 34, Turin, Italy',
-        phone: '(480) 631-2097'
-      },
-      {
-        name: 'Martin Blank',
-        email: 'martinblank@mail.com',
-        address: 'Via Monte Bianco 34, Turin, Italy',
-        phone: '(480) 631-2097'
-      }
     ]
   }),
 
   methods: {
-    openDialogEdit () {
-      this.dialogEdit = true
-    },
-    openDialogAdd () {
+    openDialogAdd (item, index) {
+      this.infoTempo = index
+      this.itemTempo = item
       this.dialogAdd = true
     },
     openDialogSelectedDelete () {
       this.dialogSelectedDelete = true
+    },
+    openDialogEdit () {
+      this.dialogEdit = true
+    },
+    openDialogDelete (index) {
+      this.infoTempo = index
+      this.dialogDelete = true
+    },
+    confirmDialogDelete () {
+      if (this.infoTempo === -1) { return }
+      this.info.splice(this.infoTempo, 1)
+      this.infoTempo = -1
+    },
+    closeDialogAdd () {
+      this.dialogAdd = false
+    },
+    closeDialogSelectedDelete () {
+      this.dialogSelectedDelete = false
+    },
+    closeDialogEdit () {
+      this.dialogEdit = false
+    },
+    closeDialogDelete () {
+      this.dialogDelete = false
+    },
+    onSubmit (action, data) {
+      if (action === 'Add') {
+        this.info.push(data)
+      } else {
+        this.info[this.infoTempo] = data
+        const temp = this.info
+        this.info = []
+        setTimeout(() => {
+          this.info = temp
+        }, 0)
+      }
+      this.infoTempo = -1
     }
   }
 }
 </script>
+
+<style>
+.footerFont {
+  font-size: 12px;
+}
+.footerButton {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  min-height: 30px;
+}
+</style>
