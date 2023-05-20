@@ -124,6 +124,22 @@
       </template>
     </v-data-table>
     <pre>Selected: {{ selected }} </pre>
+    <v-snackbar
+      v-model="snackbar"
+    >
+      {{ text }}
+
+      <template #action="{ attrs }">
+        <v-btn
+          color="pink"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <!--Dialogs-->
     <!--Call dialogAdd from components(AddEmployee,Edit)-->
     <cpn-dialog-add
@@ -136,12 +152,15 @@
     <!--Call dialogDelete from components(SelectedDelete)-->
     <cpn-dialog-delete
       :is-open="dialogSelectedDelete"
+      single-or-multi
+      :selected="selected"
       @dialogConfirm="confirmDialogSelectedDelete"
       @dialogClose="closeDialogSelectedDelete"
     />
     <!--Call dialogDelete from components (DeleteAnEmployee)-->
     <cpn-dialog-delete
       :is-open="dialogDelete"
+      :selected="selected"
       @dialogConfirm="confirmDialogDelete"
       @dialogClose="closeDialogDelete"
     />
@@ -158,6 +177,8 @@ export default {
     cpnDialogAdd, cpnDialogDelete
   },
   data: () => ({
+    snackbar: false,
+    text: '',
     count: 0,
     infoTemp: null,
     indexTemp: -1,
@@ -196,14 +217,21 @@ export default {
       this.dialogDelete = true
     },
     confirmDialogSelectedDelete () {
-      console.log('testTable')
+      if (this.selected === []) {
+        this.text = 'Please Select row to delete'
+        this.snackbar = true
+      }
       for (let i = 0; i < this.selected.length; i++) {
         console.log(this.info.indexOf(this.selected[i]))
         this.info.splice(this.info.indexOf(this.selected[i]), 1)
       }
+      this.text = 'Selection Deleted'
+      this.snackbar = true
       this.selected = []
     },
     confirmDialogDelete () {
+      this.text = 'Deleted'
+      this.snackbar = true
       if (this.indexTemp === -1) { return }
       this.info.splice(this.indexTemp, 1)
       this.indexTemp = -1

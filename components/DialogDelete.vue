@@ -27,6 +27,12 @@
             <v-card-text>
               <div style="color:#d4e157;">
                 this action cannot be undone.
+                <pre>
+
+                selected :{{ selected.length === 0 }}
+                single :{{ singleOrMulti }}
+                condition : {{ selected.length === 0 && singleOrMulti === true }}
+                </pre>
               </div>
             </v-card-text>
           </v-col>
@@ -46,6 +52,7 @@
             </v-btn>
             <v-btn
               color="red"
+              :disabled="selected.length === 0 && singleOrMulti"
               @click="confirmDelete"
             >
               <div style="color: white">
@@ -63,6 +70,14 @@
 export default {
   props: {
     isOpen: {
+      type: Boolean,
+      default: false
+    },
+    selected: {
+      type: Array,
+      default: () => []
+    },
+    singleOrMulti: {
       type: Boolean,
       default: false
     }
