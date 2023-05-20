@@ -5,10 +5,11 @@
       light
       :headers="headers"
       :items="info"
-      :items-per-page="5"
+      :items-per-page="info.length"
       show-select
       class="elevation-1"
       item-key="name"
+      hide-default-footer
     >
       <!--Table-data No. ++-->
       <template #[`item.numberSq`]="{index}">

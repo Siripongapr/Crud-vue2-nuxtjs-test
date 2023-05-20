@@ -144,7 +144,13 @@ export default {
     }
   },
   data: () => ({
-    formInput: {}
+    formInput: {},
+    inputTemp: {
+      name: '',
+      email: '',
+      address: '',
+      phone: ''
+    }
   }),
   computed: {
     action: function () {
@@ -168,17 +174,13 @@ export default {
     onSubmit () {
       this.$emit('onSubmit', this.action, this.formInput)
       this.isDialogOpen = false
+      this.formInput = JSON.parse(JSON.stringify(this.inputTemp))
     },
     checkUpdate () {
       if (this.itemTemp) {
         this.formInput = JSON.parse(JSON.stringify(this.itemTemp))
       } else {
-        this.formInput = {
-          name: '',
-          email: '',
-          address: '',
-          phone: ''
-        }
+        this.formInput = JSON.parse(JSON.stringify(this.inputTemp))
       }
     }
   }
