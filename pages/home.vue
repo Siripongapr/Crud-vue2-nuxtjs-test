@@ -24,3 +24,9 @@
     </v-card>
   </v-app>
 </template>
+
+<style>
+.full-image {
+  object-fit: contain;
+}
+</style>
