@@ -5,11 +5,10 @@
       light
       :headers="headers"
       :items="info"
-      :items-per-page="6"
+      :items-per-page="5"
       show-select
       class="elevation-1"
       item-key="name"
-      hide-default-footer
     >
       <!--Table-data No. ++-->
       <template #[`item.numberSq`]="{index}">
@@ -82,53 +81,11 @@
           </v-icon>
         </v-btn>
       </template>
-      <template #footer>
-        <v-container>
-          <div class="d-flex  footerFont">
-            <div
-              class="mr-auto"
-            >
-              Showing
-              <b> 5 </b>
-              out of
-              <b> 25 </b>
-              entries
-            </div>
-            <div
-              class="d-flex footerFont"
-            >
-              <v-btn text style="font-size:12px">
-                Previous
-              </v-btn>
-              <v-btn text style="font-size:12px">
-                1
-              </v-btn>
-              <v-btn text style="font-size:12px">
-                2
-              </v-btn>
-              <v-btn text style="font-size:12px">
-                3
-              </v-btn>
-              <v-btn text style="font-size:12px">
-                4
-              </v-btn>
-              <v-btn text style="font-size:12px">
-                5
-              </v-btn>
-              <v-btn text style="font-size:12px">
-                Next
-              </v-btn>
-            </div>
-          </div>
-        </v-container>
-      </template>
     </v-data-table>
-    <pre>Selected: {{ selected }} </pre>
     <v-snackbar
       v-model="snackbar"
     >
       {{ text }}
-
       <template #action="{ attrs }">
         <v-btn
           color="pink"

@@ -27,12 +27,6 @@
             <v-card-text>
               <div style="color:#d4e157;">
                 this action cannot be undone.
-                <pre>
-
-                selected :{{ selected.length === 0 }}
-                single :{{ singleOrMulti }}
-                condition : {{ selected.length === 0 && singleOrMulti === true }}
-                </pre>
               </div>
             </v-card-text>
           </v-col>
