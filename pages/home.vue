@@ -1,9 +1,5 @@
 <template>
   <v-app>
-    <v-img
-      :style="{ width: '600px', height: '600px', maxHeight: '600px'}"
-      src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-    />
     <v-card width="300" class="mx-auto mt-5">
       <v-card-title>
         <h1 class="display-1">

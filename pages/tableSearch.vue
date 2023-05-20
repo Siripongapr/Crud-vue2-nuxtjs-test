@@ -208,6 +208,7 @@ export default {
     onSubmit (action, data) {
       if (action === 'Add') {
         this.info.push(data)
+        this.text = 'Added Employee'
       } else {
         this.info[this.indexTemp] = data
         const temp = this.info
@@ -215,7 +216,9 @@ export default {
         setTimeout(() => {
           this.info = temp
         }, 0)
+        this.text = 'Edited Employee'
       }
+      this.snackbar = true
       this.indexTemp = -1
     }
   }
