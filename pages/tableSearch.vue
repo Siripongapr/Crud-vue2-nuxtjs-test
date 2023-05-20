@@ -15,7 +15,6 @@
       <template #[`item.numberSq`]="{index}">
         {{ index+1 }}
       </template>
-
       <!--create toolbar at top-->
       <template #top>
         <v-toolbar flat color="#0D47A1">
@@ -124,23 +123,23 @@
         </v-container>
       </template>
     </v-data-table>
-
+    <pre>Selected: {{ selected }} </pre>
     <!--Dialogs-->
-    <!--Call dialogAdd from components-->
+    <!--Call dialogAdd from components(AddEmployee,Edit)-->
     <cpn-dialog-add
-      :item-temp="itemTempo"
+      :item-temp="infoTemp"
       :is-open="dialogAdd"
       title="Add New Employee"
       @dialogClose="closeDialogAdd"
       @onSubmit="onSubmit"
     />
-    <!--Call dialogDelete from components-->
+    <!--Call dialogDelete from components(SelectedDelete)-->
     <cpn-dialog-delete
       :is-open="dialogSelectedDelete"
+      @dialogConfirm="confirmDialogSelectedDelete"
       @dialogClose="closeDialogSelectedDelete"
     />
-
-    <!--Call dialogDelete from components (reuse)-->
+    <!--Call dialogDelete from components (DeleteAnEmployee)-->
     <cpn-dialog-delete
       :is-open="dialogDelete"
       @dialogConfirm="confirmDialogDelete"
@@ -159,9 +158,9 @@ export default {
     cpnDialogAdd, cpnDialogDelete
   },
   data: () => ({
-    itemTempo: null,
     count: 0,
-    infoTempo: -1,
+    infoTemp: null,
+    indexTemp: -1,
     selected: [],
     dialogAdd: false,
     dialogSelectedDelete: false,
@@ -185,24 +184,29 @@ export default {
 
   methods: {
     openDialogAdd (item, index) {
-      this.infoTempo = index
-      this.itemTempo = item
+      this.indexTemp = index
+      this.infoTemp = item
       this.dialogAdd = true
     },
     openDialogSelectedDelete () {
       this.dialogSelectedDelete = true
     },
-    openDialogEdit () {
-      this.dialogEdit = true
-    },
     openDialogDelete (index) {
-      this.infoTempo = index
+      this.indexTemp = index
       this.dialogDelete = true
     },
+    confirmDialogSelectedDelete () {
+      console.log('testTable')
+      for (let i = 0; i < this.selected.length; i++) {
+        console.log(this.info.indexOf(this.selected[i]))
+        this.info.splice(this.info.indexOf(this.selected[i]), 1)
+      }
+      this.selected = []
+    },
     confirmDialogDelete () {
-      if (this.infoTempo === -1) { return }
-      this.info.splice(this.infoTempo, 1)
-      this.infoTempo = -1
+      if (this.indexTemp === -1) { return }
+      this.info.splice(this.indexTemp, 1)
+      this.indexTemp = -1
     },
     closeDialogAdd () {
       this.dialogAdd = false
@@ -220,14 +224,14 @@ export default {
       if (action === 'Add') {
         this.info.push(data)
       } else {
-        this.info[this.infoTempo] = data
+        this.info[this.indexTemp] = data
         const temp = this.info
         this.info = []
         setTimeout(() => {
           this.info = temp
         }, 0)
       }
-      this.infoTempo = -1
+      this.indexTemp = -1
     }
   }
 }
