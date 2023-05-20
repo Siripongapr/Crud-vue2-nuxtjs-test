@@ -92,7 +92,6 @@ export default {
     confirmDelete () {
       this.isDialogOpen = false
       this.$emit('dialogConfirm')
-      console.log('test')
     }
   }
 }

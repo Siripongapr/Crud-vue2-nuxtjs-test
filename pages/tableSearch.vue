@@ -83,6 +83,8 @@
         </v-btn>
       </template>
     </v-data-table>
+
+    <!--Create snackbar-->
     <v-snackbar
       v-model="snackbar"
     >
@@ -103,7 +105,6 @@
     <cpn-dialog-add
       :item-temp="infoTemp"
       :is-open="dialogAdd"
-      title="Add New Employee"
       @dialogClose="closeDialogAdd"
       @onSubmit="onSubmit"
     />
@@ -180,7 +181,6 @@ export default {
         this.snackbar = true
       }
       for (let i = 0; i < this.selected.length; i++) {
-        console.log(this.info.indexOf(this.selected[i]))
         this.info.splice(this.info.indexOf(this.selected[i]), 1)
       }
       this.text = 'Selection Deleted'

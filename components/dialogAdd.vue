@@ -134,10 +134,6 @@ export default {
       type: Object,
       default: null
     },
-    title: {
-      type: String,
-      required: true
-    },
     isOpen: {
       type: Boolean,
       default: false
